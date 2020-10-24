@@ -1,0 +1,20 @@
+#error {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 3px;
+    background-color: crimson;
+    color: white;
+    font-family: sans-serif;
+}
+
+#table-container {
+    margin-top: 10px;
+}
+
+tr {
+    height: 20px;
+}
+
+td {
+    font-family: sans-serif;
+}

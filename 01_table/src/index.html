@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Конструктор таблиц</title>
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <button onclick="createTable()">Создать таблицу</button>
+        <button onclick="addRow()">Создать строку</button>
+        <button onclick="addColumn()">Создать столбец</button>
+        <button onclick="removeTable()">Удалить таблицу</button>
+    </div>
+    <div id="error" hidden></div>
+    <div id="table-container"></div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
