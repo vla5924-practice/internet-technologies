@@ -48,6 +48,7 @@ e.get('/login', function (request, result) {
         else
             result.redirect('/tickets');
     } else {
+        result.cookie('session', '', { expires: new Date(Date.now() - 1) });
         result.render('login', {
             error: false
         });
@@ -65,6 +66,7 @@ e.post('/login', urlencodedParser, function (request, result) {
         else
             result.redirect('/tickets');
     } else {
+        result.cookie('session', '', { expires: new Date(Date.now() - 1) });
         result.render('login', {
             error: "Incorrect username or password"
         });
