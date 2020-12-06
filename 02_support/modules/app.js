@@ -34,7 +34,7 @@ module.exports.init = function () {
     )`);
     db.query(`CREATE TABLE IF NOT EXISTS ${tables.tickets} (
         id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
-        timestamp INTEGER,
+        timestamp BIGINT,
         description TEXT NOT NULL,
         created_by INTEGER NOT NULL,
         assigned_to INTEGER NOT NULL,
@@ -91,6 +91,8 @@ module.exports.getUsers = function () {
 
 module.exports.addTicket = function (userId, description) {
     this.checkDb();
-    let result = db.query(`INSERT INTO ${tables.tickets} SET timestamp = 0, description = '${description}', created_by = ${userId}, assigned_to = 0`);
+    let ts = +new Date();
+    console.log(ts);
+    let result = db.query(`INSERT INTO ${tables.tickets} SET timestamp = ${ts}, description = '${description}', created_by = ${userId}, assigned_to = 0, comment = ''`);
     return db.row(`SELECT * FROM ${tables.tickets} WHERE id = ${result.insertId}`);
-}
+};
