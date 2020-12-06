@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New ticket</title>
+</head>
+<body>
+    <div align="right">
+        <%= user.fio %>
+        [<a href="/logout">выйти</a>]
+    </div>
+    <% if (ticket) { %>
+        <div>
+            Ticket created [<a href="/tickets">view all tickets</a>]<br />
+            ID: <%= ticket.id %><br />
+            Description: <%= ticket.description %>
+        </div>
+    <% } %>
+    <form method="post">
+        Description:<br />
+        <textarea 
+            rows="5" 
+            width=100% 
+            name="description" 
+            placeholder="Describe your problem here..."
+        ></textarea>
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "support_app",
+  "version": "1.0.0",
+  "description": "Support service web-application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vla5924-practice/internet-technologies.git"
+  },
+  "author": "Maksim Vlasov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vla5924-practice/internet-technologies/issues"
+  },
+  "homepage": "https://github.com/vla5924-practice/internet-technologies#readme",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "sync-mysql": "^3.0.1"
+  }
+}
