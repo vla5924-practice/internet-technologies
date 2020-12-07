@@ -1,11 +1,13 @@
 <%- include('header'); %>
+<div><b>Please log in to continue.</b></div><br />
 <% if (error) { %>
     <div>
         <%= error %>
     </div>
+    <br />
 <% } %>
 <form method="post">
-    Username: <input type="text" name="username" autocomplete="off"><br /><br />
+    Username: <input type="text" name="username" autocomplete="off" autofocus><br /><br />
     Password: <input type="password" name="password"><br /><br />
     <button type="submit">Login</button>
 </form>

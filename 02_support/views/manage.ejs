@@ -22,9 +22,9 @@
                     <%= tickets[i].is_closed == 1 ? 'checked' : '' %> />
             </td>
             <td>
-                <textarea rows="5" style="width:100%"
+                <textarea rows="1" style="width:100%"
                     id="comment-<%= tickets[i].id %>"><%= tickets[i].comment %></textarea><br />
-                <button onclick="setComment(this)" data-id="<%= tickets[i].id %>">save</button>
+                <button onclick="setComment(this)" data-id="<%= tickets[i].id %>">Save</button>
                 <span id="comment-error-<%= tickets[i].id %>"></span>
             </td>
         </tr>
@@ -37,12 +37,12 @@
     function setClosed(checkbox) {
         checkbox.disabled = true;
         let ticketId = checkbox.dataset.id;
-        request.post(`/api/set_closed/${ticketId}`, { is_closed: checkbox.value === 'on' ? 0 : 1 })
+        request.post(`/api/set_closed/${ticketId}`, { is_closed: checkbox.checked ? 1 : 0 })
             .then(response => response.json())
             .then(data => {
                 checkbox.disabled = false;
                 if (!data.ok)
-                    checkbox.checked = !(checkbox.value === 'on');
+                    checkbox.checked = !checkbox.checked;
             });
     }
 
@@ -52,16 +52,16 @@
         let error = el.id(`comment-error-${ticketId}`);
         textarea.readonly = true;
         button.disabled = true;
-        error.innerHTML = 'Wait...';
+        error.innerHTML = 'Sending request...';
         request.post(`/api/comment/${ticketId}`, { comment: textarea.value })
             .then(response => response.json())
             .then(data => {
                 button.disabled = false;
                 textarea.readonly = false;
                 if (data.ok)
-                    error.innerHTML = '';
+                    error.innerHTML = 'Saved successfully.';
                 else
-                    error.innerHTML = 'Server error.';
+                    error.innerHTML = 'Internal server error.';
             });
     }
 </script>

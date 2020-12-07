@@ -17,7 +17,7 @@ e.set('view engine', 'ejs');
 e.use(express.static('public'));
 e.use(cookieParser());
 
-let authUserWithSession = (request, result) => {
+let authUserWithSession = (request, _result) => {
     let session = request.cookies.session;
     if (session)
         return app.authUserWithSession(session);
@@ -75,7 +75,10 @@ e.post('/login', urlencodedParser, function (request, result) {
     }
 });
 
-e.get('/logout', function (_request, result) {
+e.get('/logout', function (request, result) {
+    let session = request.cookies.session;
+    if (session)
+        app.resetSession(session);
     result.cookie('session', '', { expires: new Date(Date.now() - 1) });
     result.redirect('/login');
 });
@@ -90,7 +93,7 @@ e.get('/admin', function (request, result) {
         return;
     }
     result.render('admin', {
-        title: 'Admin',
+        title: 'Admin panel',
         tickets: app.getTickets(),
         users: app.getUsers(),
         user: user
@@ -107,7 +110,7 @@ e.get('/manage', function (request, result) {
         return;
     }
     result.render('manage', {
-        title: 'Manage',
+        title: 'Management panel',
         tickets: app.getTickets(),
         users: app.getUsers(),
         user: user
@@ -124,7 +127,7 @@ e.get('/tickets', function (request, result) {
         return;
     }
     result.render('tickets', {
-        title: 'Tickets',
+        title: 'Tickets list',
         tickets: app.getTickets(),
         users: app.getUsers(),
         user: user
@@ -190,6 +193,7 @@ e.post('/api/comment/:ticketId', urlencodedParser, function (request, result) {
         result.send(JSON.stringify({ ok: false }));
         return;
     }
+    let comment = request.body.comment ? request.body.comment : '';
     let response = app.setTicketComment(request.params.ticketId, request.body.comment);
     result.send(JSON.stringify(response));
 });

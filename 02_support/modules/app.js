@@ -1,4 +1,5 @@
 let database = require('./database.js');
+let md5 = require('js-md5');
 
 const tables = {
     users     : "users",
@@ -30,7 +31,7 @@ module.exports.init = function () {
         fio VARCHAR(100) DEFAULT '' NOT NULL,
         phone VARCHAR(20) DEFAULT '' NOT NULL,
         role INTEGER DEFAULT 0 NOT NULL,
-        session VARCHAR(10) NOT NULL
+        session VARCHAR(32) DEFAULT '' NOT NULL
     )`);
     db.query(`CREATE TABLE IF NOT EXISTS ${tables.tickets} (
         id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -39,7 +40,7 @@ module.exports.init = function () {
         created_by INTEGER NOT NULL,
         assigned_to INTEGER NOT NULL,
         is_closed INTEGER DEFAULT 0 NOT NULL,
-        comment TEXT NOT NULL
+        comment TEXT
     )`);
     isInitialized = true;
 };
@@ -61,16 +62,25 @@ module.exports.authUserWithSession = function (session) {
     return { ok: true, ...user};
 };
 
+module.exports.calculateSession = function (userId, login) {
+    let str = Date.now().toString() + userId + Math.floor(Math.random() * 1000).toString() + login;
+    return md5(str);
+}
+
 module.exports.authUserWithLogin = function (login, password) {
     this.checkDb();
     let userExists = db.row(`SELECT COUNT(*) FROM ${tables.users} WHERE login = ? AND password = ?`, login, password)["COUNT(*)"];
     if (!userExists)
         return { ok: false };
     let user = db.row(`SELECT * FROM ${tables.users} WHERE login = ?`, login);
-    user.session = user.id + user.login;
+    user.session = this.calculateSession(user.id, login);
     db.query(`UPDATE ${tables.users} SET session = ? WHERE id = ?`, user.session, user.id);
     return { ok: true, ...user};
 };
+
+module.exports.resetSession = function (session) {
+    db.query(`UPDATE ${tables.users} SET session = '' WHERE session = ?`, session);
+}
 
 module.exports.getTickets = function () {
     this.checkDb();

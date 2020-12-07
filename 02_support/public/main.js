@@ -5,7 +5,6 @@ let request = {
     post(url, parameters) {
         let uri = encodeURIComponent;
         let queryString = Object.keys(parameters).map(key => uri(key) + '=' + uri(parameters[key])).join('&');
-        console.log(queryString);
         return fetch(url, {
             method: 'POST',
             headers: {

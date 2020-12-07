@@ -1,5 +1,8 @@
 <div align="right">
     Hello, <%= user.fio %>!
-    &middot;
-    <a href="/logout">Logout</a>
+    &middot; <a href="/tickets">Tickets list</a>
+    <% if (user.role == 1 || user.role == 2) { %>&middot; <a href="/manage">Management panel</a><% } %>
+    <% if (user.role == 2) { %>&middot; <a href="/admin">Admin panel</a><% } %>
+    &middot; <a href="/logout">Logout</a>
 </div>
+<br />
