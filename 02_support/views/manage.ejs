@@ -29,7 +29,7 @@ Tickets assigned to you:
                 <textarea rows="1" style="width:100%"
                     id="comment-<%= tickets[i].id %>"><%= tickets[i].comment %></textarea><br />
                 <button onclick="setComment(this)" data-id="<%= tickets[i].id %>">Save</button>
-                <span id="comment-error-<%= tickets[i].id %>"></span>
+                <small id="comment-error-<%= tickets[i].id %>"></small>
             </td>
         </tr>
         <% } %>

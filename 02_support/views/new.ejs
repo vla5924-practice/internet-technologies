@@ -6,14 +6,22 @@
         ID: <%= ticket.id %><br />
         Description: <%= ticket.description %>
     </div>
+    <br />
 <% } %>
+<div>
+    <b>Your name:</b> <%= user.fio %><br />
+    <b>Your phone:</b> <%= user.phone %>
+</div>
 <form method="post">
+    <b>Your problem description:</b>
     <textarea 
         rows="10" 
         style="width:100%" 
         name="description" 
         placeholder="Describe your problem here..."
+        required
     ></textarea>
     <button type="submit">Send</button>
+    <small>Notice: when you click "Send", all data above will be sent to support managers.</small>
 </form>
 <%- include('footer'); %>

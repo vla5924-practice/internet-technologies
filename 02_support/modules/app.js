@@ -2,18 +2,18 @@ let database = require('./database.js');
 let md5 = require('js-md5');
 
 const tables = {
-    users     : "users",
-    customers : "customers",
-    managers  : "managers",
-    tickets   : "tickets"
+    users: "users",
+    customers: "customers",
+    managers: "managers",
+    tickets: "tickets"
 };
 
 
 let db = new database({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
-    database : 'support'
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'support'
 });
 let isInitialized = false;
 
@@ -50,7 +50,7 @@ module.exports.authUserWithSession = function (session) {
     if (!userExists)
         return { ok: false };
     let user = db.row(`SELECT * FROM ${tables.users} WHERE session = ?`, session);
-    return { ok: true, ...user};
+    return { ok: true, ...user };
 };
 
 module.exports.calculateSession = function (userId, login) {
@@ -66,11 +66,23 @@ module.exports.authUserWithLogin = function (login, password) {
     let user = db.row(`SELECT * FROM ${tables.users} WHERE login = ?`, login);
     user.session = this.calculateSession(user.id, login);
     db.query(`UPDATE ${tables.users} SET session = ? WHERE id = ?`, user.session, user.id);
-    return { ok: true, ...user};
+    return { ok: true, ...user };
 };
 
 module.exports.resetSession = function (session) {
     db.query(`UPDATE ${tables.users} SET session = '' WHERE session = ?`, session);
+}
+
+module.exports.registerUser = function (requestBody) {
+    let { fio, phone, username, password } = requestBody;
+    if (!fio || !phone || !username || !password)
+        return { ok: false, error: "Some mandatory fields are missing." };
+    this.checkDb();
+    let userExists = db.row(`SELECT COUNT(*) FROM ${tables.users} WHERE login = ?`, username)["COUNT(*)"];
+    if (userExists)
+        return { ok: false, error: "User with this username already exists." };
+    db.query(`INSERT INTO users SET login = ?, password = ?, fio = ?, phone = ?, role = 0`, username, password, fio, phone);
+    return { ok: true };
 }
 
 module.exports.getTickets = function (assignedToUserId = 0) {
@@ -90,7 +102,7 @@ module.exports.getUsers = function () {
 
 module.exports.getManagers = function () {
     this.checkDb();
-    return db.query(`SELECT id, fio FROM ${tables.users} WHERE role = 1`);
+    return [{ id: 0, fio: 'Nobody' }, ...db.query(`SELECT id, fio FROM ${tables.users} WHERE role = 1 OR role = 2`)];
 };
 
 module.exports.addTicket = function (userId, description) {

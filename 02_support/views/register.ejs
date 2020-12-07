@@ -1,5 +1,5 @@
 <%- include('header'); %>
-<div><b>Please log in to continue.</b></div><br />
+<div><b>Create an account to start using the platform.</b></div><br />
 <% if (error) { %>
     <div>
         <%= error %>
@@ -7,9 +7,10 @@
     <br />
 <% } %>
 <form method="post">
+    Full name: <input type="text" name="fio" autocomplete="off" autofocus required><br /><br />
+    Phone number: <input type="text" autocomplete="off" name="phone" required><br /><br />
     Username: <input type="text" name="username" autocomplete="off" autofocus required><br /><br />
     Password: <input type="password" name="password" required><br /><br />
     <button type="submit">Login</button>
-    <small>or <a href="/register">create an account</a></small>
 </form>
 <%- include('footer'); %>

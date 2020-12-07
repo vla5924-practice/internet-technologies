@@ -163,6 +163,48 @@ e.post('/new', urlencodedParser, function (request, result) {
     });
 });
 
+e.get('/register', function (request, result) {
+    let user = authUserWithSession(request, result);
+    if (user.ok) {
+        if (user.role == 1)
+            result.redirect('/manage');
+        else if (user.role == 2)
+            result.redirect('/admin');
+        else
+            result.redirect('/tickets');
+    } else {
+        result.render('register', {
+            title: 'Create an account',
+            error: false
+        });
+    }
+});
+
+e.post('/register', urlencodedParser, function (request, result) {
+    let user = authUserWithSession(request, result);
+    if (user.ok) {
+        result.cookie('session', user.session);
+        if (user.role == 1)
+            result.redirect('/manage');
+        else if (user.role == 2)
+            result.redirect('/admin');
+        else
+            result.redirect('/tickets');
+    } else {
+        let newUser = app.registerUser(request.body);
+        if (newUser.ok) {
+            result.render('register-ok', {
+                title: 'Create an account',
+            });
+        } else {
+            result.render('register', {
+                title: 'Create an account',
+                error: newUser.error
+            });
+        }
+    }
+});
+
 e.post('/api/assign/:ticketId', urlencodedParser, function (request, result) {
     let user = authUserWithSession(request, result);
     if (!user.ok || user.role != 2) {

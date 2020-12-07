@@ -21,12 +21,11 @@
             </td>
             <td>
                 <select onchange="assignTicket(this)" data-id="<%= tickets[i].id %>" size="1">
-                    <option value="0">Nobody</option>
-                    <% for (let i = 0; i < managers.length; i++) { %>
-                        <option value="<%= managers[i].id %>"><%= managers[i].fio %></option>
+                    <% for (let j = 0; j < managers.length; j++) { %>
+                    <option value="<%= managers[j].id %>" <%= managers[j].id == tickets[i].assigned_to ? 'selected' : '' %>><%= managers[j].fio %></option>
                     <% } %>
                 </select>
-                <span id="error-<%= tickets[i].id %>"></span>
+                <small id="error-<%= tickets[i].id %>"></small>
             </td>
             <td>
                 <%- tickets[i].is_closed == 1 ? '<span style="color:green">Closed</span>' : '<span style="color:red">Opened</span>' %>
