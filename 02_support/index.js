@@ -164,7 +164,7 @@ e.post('/new', urlencodedParser, function (request, result) {
     });
 });
 
-e.post('/api/assign/:ticketId', function (request, result) {
+e.post('/api/assign/:ticketId', urlencodedParser, function (request, result) {
     let user = authUserWithSession(request, result);
     if (!user.ok || user.role != 2) {
         result.send(JSON.stringify({ ok: false }));
@@ -174,18 +174,17 @@ e.post('/api/assign/:ticketId', function (request, result) {
     result.send(JSON.stringify(response));
 });
 
-e.post('/api/set_closed/:ticketId', function (request, result) {
+e.post('/api/set_closed/:ticketId', urlencodedParser, function (request, result) {
     let user = authUserWithSession(request, result);
     if (!user.ok || (user.role != 1 && user.role != 2)) {
         result.send(JSON.stringify({ ok: false }));
         return;
     }
-    let isClosed = Number(request.body.is_closed === 'on');
-    let response = app.setTicketClosed(request.params.ticketId, isClosed);
+    let response = app.setTicketClosed(request.params.ticketId, request.body.is_closed);
     result.send(JSON.stringify(response));
 });
 
-e.post('/api/comment/:ticketId', function (request, result) {
+e.post('/api/comment/:ticketId', urlencodedParser, function (request, result) {
     let user = authUserWithSession(request, result);
     if (!user.ok || (user.role != 1 && user.role != 2)) {
         result.send(JSON.stringify({ ok: false }));

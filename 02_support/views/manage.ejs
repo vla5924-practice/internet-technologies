@@ -37,12 +37,12 @@
     function setClosed(checkbox) {
         checkbox.disabled = true;
         let ticketId = checkbox.dataset.id;
-        request.postQueryString(`/api/set_closed/${ticketId}`, { is_closed: checkbox.value })
+        request.post(`/api/set_closed/${ticketId}`, { is_closed: checkbox.value === 'on' ? 0 : 1 })
             .then(response => response.json())
             .then(data => {
                 checkbox.disabled = false;
                 if (!data.ok)
-                    checkbox.checked = !(checkbox.value === 'checked');
+                    checkbox.checked = !(checkbox.value === 'on');
             });
     }
 
@@ -53,7 +53,7 @@
         textarea.readonly = true;
         button.disabled = true;
         error.innerHTML = 'Wait...';
-        request.postQueryString(`/api/comment/${ticketId}`, { comment: textarea.value })
+        request.post(`/api/comment/${ticketId}`, { comment: textarea.value })
             .then(response => response.json())
             .then(data => {
                 button.disabled = false;

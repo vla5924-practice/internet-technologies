@@ -2,7 +2,7 @@ let request = {
     get(url) {
         return fetch(url);
     },
-    postQueryString(url, parameters) {
+    post(url, parameters) {
         let uri = encodeURIComponent;
         let queryString = Object.keys(parameters).map(key => uri(key) + '=' + uri(parameters[key])).join('&');
         console.log(queryString);
@@ -13,15 +13,6 @@ let request = {
             },
             body: queryString
         });
-    },
-    postJSON(url, parameters) {
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(parameters)
-        });
     }
 };
 
@@ -29,7 +20,7 @@ let el = {
     id(id) {
         return document.getElementById(id);
     },
-    className(className) {
+    cl(className) {
         return document.getElementsByClassName(className);
     },
     q(querySelector) {
