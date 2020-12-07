@@ -8,7 +8,6 @@ const tables = {
     tickets   : "tickets"
 };
 
-const roles = [ "customer", "manager", "admin" ];
 
 let db = new database({
     host     : 'localhost',
@@ -45,14 +44,6 @@ module.exports.init = function () {
     isInitialized = true;
 };
 
-module.exports.setDemo = function (users) {
-    this.checkDb();
-    users.forEach(user => {
-        db.query(`INSERT INTO ${tables.users} SET login = ?, password = ?, fio = ?, phone = ?, role = ?`,
-                 user.login, user.password, user.fio, user.phone, user.role);
-    });
-};
-
 module.exports.authUserWithSession = function (session) {
     this.checkDb();
     let userExists = db.row(`SELECT COUNT(*) FROM ${tables.users} WHERE session = ?`, session)["COUNT(*)"];
@@ -82,8 +73,10 @@ module.exports.resetSession = function (session) {
     db.query(`UPDATE ${tables.users} SET session = '' WHERE session = ?`, session);
 }
 
-module.exports.getTickets = function () {
+module.exports.getTickets = function (assignedToUserId = 0) {
     this.checkDb();
+    if (assignedToUserId)
+        return db.query(`SELECT * FROM ${tables.tickets} WHERE assigned_to = ? ORDER BY timestamp DESC`, assignedToUserId);
     return db.query(`SELECT * FROM ${tables.tickets} ORDER BY timestamp DESC`);
 };
 
@@ -93,6 +86,11 @@ module.exports.getUsers = function () {
     let users = {};
     usersRaw.forEach(user => { users[user.id] = user });
     return users;
+};
+
+module.exports.getManagers = function () {
+    this.checkDb();
+    return db.query(`SELECT id, fio FROM ${tables.users} WHERE role = 1`);
 };
 
 module.exports.addTicket = function (userId, description) {

@@ -7,11 +7,6 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 let app = require('./modules/app.js');
 app.init();
-/*app.setDemo([
-    { login: 'customer', password: '123', fio: 'customer', phone: '123', role: 0 },
-    { login: 'manager', password: '123', fio: 'manager', phone: '', role: 1 },
-    { login: 'admin', password: '123', fio: 'admin', phone: '', role: 2 },
-]);*/
 
 e.set('view engine', 'ejs');
 e.use(express.static('public'));
@@ -94,6 +89,7 @@ e.get('/admin', function (request, result) {
     }
     result.render('admin', {
         title: 'Admin panel',
+        managers: app.getManagers(),
         tickets: app.getTickets(),
         users: app.getUsers(),
         user: user
@@ -111,7 +107,7 @@ e.get('/manage', function (request, result) {
     }
     result.render('manage', {
         title: 'Management panel',
-        tickets: app.getTickets(),
+        tickets: app.getTickets(user.id),
         users: app.getUsers(),
         user: user
     });

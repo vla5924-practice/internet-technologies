@@ -1,4 +1,63 @@
 <%- include('header'); %>
 <%- include('userbar'); %>
+<table cellpadding="5" cellspacing="0" width=100% border="1">
+    <thead>
+        <th>ID</th>
+        <th>Date/time</th>
+        <th>Description</th>
+        <th>Created by</th>
+        <th>Assigned to</th>
+        <th>Status</th>
+    </thead>
+    <tbody>
+        <% for (let i = 0; i < tickets.length; i++) { %>
+        <tr>
+            <td><%= tickets[i].id %></td>
+            <td><%= new Date(tickets[i].timestamp).toLocaleString() %></td>
+            <td><%= tickets[i].description %></td>
+            <td>
+                <%= users[tickets[i].created_by].fio %><br />
+                <%= users[tickets[i].created_by].phone %>
+            </td>
+            <td>
+                <select onchange="assignTicket(this)" data-id="<%= tickets[i].id %>" size="1">
+                    <option value="0">Nobody</option>
+                    <% for (let i = 0; i < managers.length; i++) { %>
+                        <option value="<%= managers[i].id %>"><%= managers[i].fio %></option>
+                    <% } %>
+                </select>
+                <span id="error-<%= tickets[i].id %>"></span>
+            </td>
+            <td>
+                <%- tickets[i].is_closed == 1 ? '<span style="color:green">Closed</span>' : '<span style="color:red">Opened</span>' %>
+                <% if (tickets[i].comment) { %><br />
+                    <i>
+                        <b>Comment:</b>
+                        <%= tickets[i].comment %>
+                    </i>
+                <% } %>
+            </td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>
 
+<script src="/main.js"></script>
+<script>
+    function assignTicket(select) {
+        select.disabled = true;
+        let ticketId = select.dataset.id;
+        let error = el.id(`error-${ticketId}`);
+        error.innerHTML = 'Sending request...';
+        request.post(`/api/assign/${ticketId}`, { user_id: select.value })
+            .then(response => response.json())
+            .then(data => {
+                select.disabled = false;
+                if (data.ok)
+                    error.innerHTML = 'Saved successfully.';
+                else
+                    error.innerHTML = 'Internal server error.';
+            });
+    }
+</script>
 <%- include('footer'); %>

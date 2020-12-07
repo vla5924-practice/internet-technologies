@@ -1,5 +1,6 @@
 <%- include('header'); %>
 <%- include('userbar'); %>
+Tickets assigned to you:
 <table cellpadding="5" cellspacing="0" width=100% border="1">
     <thead>
         <th>ID</th>
@@ -15,7 +16,10 @@
             <td><%= tickets[i].id %></td>
             <td><%= new Date(tickets[i].timestamp).toLocaleString() %></td>
             <td><%= tickets[i].description %></td>
-            <td><%= users[tickets[i].created_by].fio %></td>
+            <td>
+                <%= users[tickets[i].created_by].fio %><br />
+                <%= users[tickets[i].created_by].phone %>
+            </td>
             <td>
                 Closed:
                 <input type="checkbox" onchange="setClosed(this)" data-id="<%= tickets[i].id %>"

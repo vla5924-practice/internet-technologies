@@ -10,7 +10,6 @@
         <th>Description</th>
         <th>Created by</th>
         <th>Status</th>
-        <th>Comment</th>
     </thead>
     <tbody>
         <% for (let i = 0; i < tickets.length; i++) { %>
@@ -19,8 +18,15 @@
                 <td><%= new Date(tickets[i].timestamp).toLocaleString() %></td>
                 <td><%= tickets[i].description %></td>
                 <td><%= users[tickets[i].created_by].fio %></td>
-                <td><%= tickets[i].is_closed == 1 ? 'Closed' : 'Opened' %></td>
-                <td><%= tickets[i].comment %></td>
+                <td>
+                    <%- tickets[i].is_closed == 1 ? '<span style="color:green">Closed</span>' : '<span style="color:red">Opened</span>' %>
+                    <% if (tickets[i].comment) { %><br />
+                        <i>
+                            <b>Comment:</b>
+                            <%= tickets[i].comment %>
+                        </i>
+                    <% } %>
+                </td>
             </tr>
         <% } %>
     </tbody>
