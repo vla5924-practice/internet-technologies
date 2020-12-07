@@ -83,8 +83,8 @@ module.exports.getTickets = function () {
 
 module.exports.getUsers = function () {
     this.checkDb();
-    let usersRaw = db.query(`SELECT * FROM ${tables.tickets} ORDER BY timestamp DESC`);
-    let users = [];
+    let usersRaw = db.query(`SELECT * FROM ${tables.users}`);
+    let users = {};
     usersRaw.forEach(user => { users[user.id] = user });
     return users;
 };
@@ -92,7 +92,6 @@ module.exports.getUsers = function () {
 module.exports.addTicket = function (userId, description) {
     this.checkDb();
     let ts = +new Date();
-    console.log(ts);
     let result = db.query(`INSERT INTO ${tables.tickets} SET timestamp = ${ts}, description = '${description}', created_by = ${userId}, assigned_to = 0, comment = ''`);
     return db.row(`SELECT * FROM ${tables.tickets} WHERE id = ${result.insertId}`);
 };

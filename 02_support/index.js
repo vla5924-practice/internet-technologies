@@ -50,6 +50,7 @@ e.get('/login', function (request, result) {
     } else {
         result.cookie('session', '', { expires: new Date(Date.now() - 1) });
         result.render('login', {
+            title: 'Login',
             error: false
         });
     }
@@ -68,6 +69,7 @@ e.post('/login', urlencodedParser, function (request, result) {
     } else {
         result.cookie('session', '', { expires: new Date(Date.now() - 1) });
         result.render('login', {
+            title: 'Login',
             error: "Incorrect username or password"
         });
     }
@@ -88,6 +90,7 @@ e.get('/admin', function (request, result) {
         return;
     }
     result.render('admin', {
+        title: 'Admin',
         tickets: app.getTickets(),
         users: app.getUsers(),
         user: user
@@ -104,6 +107,7 @@ e.get('/manage', function (request, result) {
         return;
     }
     result.render('manage', {
+        title: 'Manage',
         tickets: app.getTickets(),
         users: app.getUsers(),
         user: user
@@ -120,6 +124,7 @@ e.get('/tickets', function (request, result) {
         return;
     }
     result.render('tickets', {
+        title: 'Tickets',
         tickets: app.getTickets(),
         users: app.getUsers(),
         user: user
@@ -136,6 +141,7 @@ e.get('/new', function (request, result) {
         return;
     }
     result.render('new', {
+        title: 'Create new ticket',
         user: user,
         ticket: false
     });
@@ -152,6 +158,7 @@ e.post('/new', urlencodedParser, function (request, result) {
     }
     let ticket = app.addTicket(user.id, request.body.description);
     result.render('new', {
+        title: 'Create new ticket',
         user: user,
         ticket: ticket
     });

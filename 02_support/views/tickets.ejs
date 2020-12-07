@@ -1,39 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tickets</title>
-</head>
-<body>
-    <div align="right">
-        <%= user.fio %>
-        [<a href="/logout">выйти</a>]
-    </div>
-    <div>
-        <a href="/new">Create new ticket...</a>
-    </div>
-    <table cellpadding="5" cellspacing="0" width=100% border="1">
-        <thead>
-            <th>ID</th>
-            <th>Timestamp</th>
-            <th>Description</th>
-            <th>Created by</th>
-            <th>Is closed</th>
-            <th>Comment</th>
-        </thead>
-        <tbody>
-            <% for (let i = 0; i < tickets.length; i++) { %>
-                <tr>
-                    <td><%= tickets[i].id %></td>
-                    <td><%= tickets[i].timestamp %></td>
-                    <td><%= tickets[i].description %></td>
-                    <td><%= users[tickets[i].created_by].fio %></td>
-                    <td><%= tickets[i].is_closed %></td>
-                    <td><%= tickets[i].comment %></td>
-                </tr>
-            <% } %>
-        </tbody>
-    </table>
-</body>
-</html>
+<%- include('header'); %>
+<%- include('userbar'); %>
+<div>
+    <a href="/new">Create new ticket...</a>
+</div>
+<table cellpadding="5" cellspacing="0" width=100% border="1">
+    <thead>
+        <th>ID</th>
+        <th>Timestamp</th>
+        <th>Description</th>
+        <th>Created by</th>
+        <th>Is closed</th>
+        <th>Comment</th>
+    </thead>
+    <tbody>
+        <% for (let i = 0; i < tickets.length; i++) { %>
+            <tr>
+                <td><%= tickets[i].id %></td>
+                <td><%= new Date(tickets[i].timestamp).toLocaleString() %></td>
+                <td><%= tickets[i].description %></td>
+                <td><%= users[tickets[i].created_by].fio %></td>
+                <td><%= tickets[i].is_closed %></td>
+                <td><%= tickets[i].comment %></td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+<%- include('footer'); %>
