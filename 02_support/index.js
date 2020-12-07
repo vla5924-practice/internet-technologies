@@ -164,4 +164,35 @@ e.post('/new', urlencodedParser, function (request, result) {
     });
 });
 
+e.post('/api/assign/:ticketId', function (request, result) {
+    let user = authUserWithSession(request, result);
+    if (!user.ok || user.role != 2) {
+        result.send(JSON.stringify({ ok: false }));
+        return;
+    }
+    let response = app.assignTicket(request.params.ticketId, request.body.user_id);
+    result.send(JSON.stringify(response));
+});
+
+e.post('/api/set_closed/:ticketId', function (request, result) {
+    let user = authUserWithSession(request, result);
+    if (!user.ok || (user.role != 1 && user.role != 2)) {
+        result.send(JSON.stringify({ ok: false }));
+        return;
+    }
+    let isClosed = Number(request.body.is_closed === 'on');
+    let response = app.setTicketClosed(request.params.ticketId, isClosed);
+    result.send(JSON.stringify(response));
+});
+
+e.post('/api/comment/:ticketId', function (request, result) {
+    let user = authUserWithSession(request, result);
+    if (!user.ok || (user.role != 1 && user.role != 2)) {
+        result.send(JSON.stringify({ ok: false }));
+        return;
+    }
+    let response = app.setTicketComment(request.params.ticketId, request.body.comment);
+    result.send(JSON.stringify(response));
+});
+
 e.listen(3000);

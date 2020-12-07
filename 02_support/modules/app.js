@@ -47,32 +47,28 @@ module.exports.init = function () {
 module.exports.setDemo = function (users) {
     this.checkDb();
     users.forEach(user => {
-        db.query(`INSERT INTO ${tables.users} SET 
-                 login = '${user.login}', 
-                 password = '${user.password}', 
-                 fio = '${user.fio}', 
-                 phone = '${user.phone}', 
-                 role = ${user.role}`);
+        db.query(`INSERT INTO ${tables.users} SET login = ?, password = ?, fio = ?, phone = ?, role = ?`,
+                 user.login, user.password, user.fio, user.phone, user.role);
     });
 };
 
 module.exports.authUserWithSession = function (session) {
     this.checkDb();
-    let userExists = db.row(`SELECT COUNT(*) FROM ${tables.users} WHERE session = '${session}'`)["COUNT(*)"];
+    let userExists = db.row(`SELECT COUNT(*) FROM ${tables.users} WHERE session = ?`, session)["COUNT(*)"];
     if (!userExists)
         return { ok: false };
-    let user = db.row(`SELECT * FROM ${tables.users} WHERE session = '${session}'`);
+    let user = db.row(`SELECT * FROM ${tables.users} WHERE session = ?`, session);
     return { ok: true, ...user};
 };
 
 module.exports.authUserWithLogin = function (login, password) {
     this.checkDb();
-    let userExists = db.row(`SELECT COUNT(*) FROM ${tables.users} WHERE login = '${login}' AND password = '${password}'`)["COUNT(*)"];
+    let userExists = db.row(`SELECT COUNT(*) FROM ${tables.users} WHERE login = ? AND password = ?`, login, password)["COUNT(*)"];
     if (!userExists)
         return { ok: false };
-    let user = db.row(`SELECT * FROM ${tables.users} WHERE login = '${login}'`);
+    let user = db.row(`SELECT * FROM ${tables.users} WHERE login = ?`, login);
     user.session = user.id + user.login;
-    db.query(`UPDATE ${tables.users} SET session = '${user.session}' WHERE id = ${user.id}`);
+    db.query(`UPDATE ${tables.users} SET session = ? WHERE id = ?`, user.session, user.id);
     return { ok: true, ...user};
 };
 
@@ -92,6 +88,24 @@ module.exports.getUsers = function () {
 module.exports.addTicket = function (userId, description) {
     this.checkDb();
     let ts = +new Date();
-    let result = db.query(`INSERT INTO ${tables.tickets} SET timestamp = ${ts}, description = '${description}', created_by = ${userId}, assigned_to = 0, comment = ''`);
-    return db.row(`SELECT * FROM ${tables.tickets} WHERE id = ${result.insertId}`);
+    let result = db.query(`INSERT INTO ${tables.tickets} SET timestamp = ?, description = ?, created_by = ?, assigned_to = 0, comment = ''`, ts, description, userId);
+    return db.row(`SELECT * FROM ${tables.tickets} WHERE id = ?`, result.insertId);
+};
+
+module.exports.assignTicket = function (ticketId, userId) {
+    this.checkDb();
+    let result = db.query(`UPDATE ${tables.tickets} SET assigned_to = ? WHERE id = ?`, userId, ticketId);
+    return { ok: true };
+};
+
+module.exports.setTicketClosed = function (ticketId, isClosed) {
+    this.checkDb();
+    let result = db.query(`UPDATE ${tables.tickets} SET is_closed = ? WHERE id = ?`, isClosed, ticketId);
+    return { ok: true };
+};
+
+module.exports.setTicketComment = function (ticketId, comment) {
+    this.checkDb();
+    let result = db.query(`UPDATE ${tables.tickets} SET comment = ? WHERE id = ?`, comment, ticketId);
+    return { ok: true };
 };

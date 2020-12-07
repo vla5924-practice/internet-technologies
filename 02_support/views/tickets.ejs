@@ -6,10 +6,10 @@
 <table cellpadding="5" cellspacing="0" width=100% border="1">
     <thead>
         <th>ID</th>
-        <th>Timestamp</th>
+        <th>Date/time</th>
         <th>Description</th>
         <th>Created by</th>
-        <th>Is closed</th>
+        <th>Status</th>
         <th>Comment</th>
     </thead>
     <tbody>
@@ -19,7 +19,7 @@
                 <td><%= new Date(tickets[i].timestamp).toLocaleString() %></td>
                 <td><%= tickets[i].description %></td>
                 <td><%= users[tickets[i].created_by].fio %></td>
-                <td><%= tickets[i].is_closed %></td>
+                <td><%= tickets[i].is_closed == 1 ? 'Closed' : 'Opened' %></td>
                 <td><%= tickets[i].comment %></td>
             </tr>
         <% } %>

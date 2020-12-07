@@ -3,10 +3,9 @@ let request = {
         return fetch(url);
     },
     postQueryString(url, parameters) {
-        // https://stackoverflow.com/questions/316781/how-to-build-query-string-with-javascript
-        let queryString = Object.keys(parameters).map(key => {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]);
-        }).join('&');
+        let uri = encodeURIComponent;
+        let queryString = Object.keys(parameters).map(key => uri(key) + '=' + uri(parameters[key])).join('&');
+        console.log(queryString);
         return fetch(url, {
             method: 'POST',
             headers: {

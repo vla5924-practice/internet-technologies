@@ -5,13 +5,13 @@ module.exports = function(connectionParams) {
     //this._db.connect();
     this._db = new mysql(connectionParams);
 
-    this.query = function (sql) {
-        let result = this._db.query(sql);
+    this.query = function (sql, ...params) {
+        let result = this._db.query(sql, params);
         return result;
     };
     
-    this.row = function (sql) {
-        let all = this.query(sql);
+    this.row = function (sql, ...params) {
+        let all = this.query(sql, ...params);
         return all[0];
     };
 };
